@@ -19,7 +19,6 @@ pip==23.0.1
 pytorch-lightning==1.9.0
 scikit-image==0.19.3
 scikit-learn==1.0.2
-scikit-learn-intelex==2021.20221004.171935
 sentence-transformers==2.2.2
 --find-links https://download.pytorch.org/whl/torch_stable.html
 torch==1.13.1
