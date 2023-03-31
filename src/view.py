@@ -43,9 +43,11 @@ def similartexts(input_text):
 
     # 類似度計算
     # sentence_vectors.csvファイル(突き合わせ対象の文章ベクトル)を読み込み
-    sentence_vectors=np.loadtxt('./src/sentence_vectors.csv', delimiter=',')
+    #sentence_vectors=np.loadtxt('./src/sentence_vectors.csv', delimiter=',')
+    sentence_vectors=np.loadtxt('./sentence_vectors.csv', delimiter=',')
     # job.csvを読み込み
-    df_job = pd.read_csv('./src/job.csv', index_col=0)
+    #df_job = pd.read_csv('./src/job.csv', index_col=0)
+    df_job = pd.read_csv('./job.csv', index_col=0)
     # 先にノルムを1にしておく。
     norm = np.linalg.norm(sentence_vectors, axis=1, keepdims=True) 
     sentence_vectors_normalized = sentence_vectors / norm
