@@ -1,12 +1,31 @@
 <!DOCTYPE html>
 <html lang="ja">
-<head>
+  <link rel="stylesheet" href="/static/style.css">
+  <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Similarity App</title>
   </head>
   <body>
-    <h1>あなたにマッチするポジションは以下の通りです</h1>
-    {{ df|safe }}
+    <h1>The results of job matching is the followings;</h1>
+    <table>
+      <thead>
+        <tr>
+          {% for i in header: %}
+          <th scope="col">{{ i }}</th>
+          {% endfor %}
+        </tr>
+      </thead>
+      <thbody>
+        {% for i in record: %}
+        <tr>
+          {% for j in i: %}
+          <td>{{ j }}</td>
+          {% endfor %}
+        </tr>
+        {% endfor %}
+      </thbody>
+    </table>
   </body>
+</html>

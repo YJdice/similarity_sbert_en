@@ -48,6 +48,7 @@ def similartexts(input_text):
     # job.csvを読み込み
     #df_job = pd.read_csv('./src/job.csv', index_col=0)
     df_job = pd.read_csv('./job.csv', index_col=0)
+    df_job.drop(['Job Description'], axis=1, inplace=True)
     # 先にノルムを1にしておく。
     norm = np.linalg.norm(sentence_vectors, axis=1, keepdims=True) 
     sentence_vectors_normalized = sentence_vectors / norm
@@ -55,23 +56,24 @@ def similartexts(input_text):
     input_text_vectors_normalized = input_text_vectors / input_norm
     # 類似度行列を計算する
     sim_matrix = sentence_vectors_normalized.dot(input_text_vectors_normalized.T)
+    sim_matrix = np.round(sim_matrix, decimals=3)
     # 類似度をdf_jobに結合
     df_sim = pd.DataFrame(sim_matrix, columns=['Similarity'])
     result_sim = df_job.join(df_sim)
-    df_match_best3 = result_sim.sort_values(by='Similarity', ascending=False).head(3)
-    df_match_best3.index=['1','2','3']
-    df_match_best3 = df_match_best3.style.set_properties(**{'text-align': 'left'})
-
-    return df_match_best3
+    #df_match_top5 = result_sim.sort_values(by='Similarity', ascending=False).head(5)
+    df_result =  result_sim.sort_values(by='Similarity', ascending=False)
+ 
+    #return df_match_top5
+    return df_result
 
 
 # WTForms を使い、index.html 側で表示させるフォームを構築
 class InputForm(Form):
-    InputFormTest = TextAreaField('希望するポジションに対して、これまでの経験、実績、獲得したスキル等を基にあなたが適任であることを簡潔に説明してください',
+    InputFormTest = TextAreaField('Please briefly explain why you are qualified for the jobs you are applying for based on your experience, achievements, and acquired skills.',
                     [validators.required()])
 
     # HTML 側で表示する submit ボタンの表示
-    submit = SubmitField('送信')
+    submit = SubmitField('Start Matching!!')
 
 # URL にアクセスがあった場合の挙動の設定
 @app.route('/', methods = ['GET', 'POST'])
@@ -90,14 +92,10 @@ def input():
             input_text = request.form['InputFormTest']
             df_output = similartexts(input_text)
 
-            #中身抽出
-            #df_values = df_output.values.tolist()
-            #ヘッダー抽出
-            #df_columns = df_output.columns.tolist()
-                                                    
-#            outputname_ = request.form['InputFormTest']
-            #return render_template('result.html', df_values=df_values, df_columns=df_columns)
-            return render_template('result.html', df=df_output.to_html())
+            header = df_output.columns
+            record = df_output.values.tolist()
+
+            return render_template('result.html', header=header, record=record)
 
     # GET メソッドの定義
     elif request.method == 'GET':
